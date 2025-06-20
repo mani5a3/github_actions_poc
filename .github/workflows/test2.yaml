@@ -25,7 +25,7 @@ jobs:
 
       # printing default and custom environment variables
     - name: printing github hash
-      run: echo "printing variables $GITHUB_SHA $steps.set_var.outputs.custom_local_variable and $custom_global_variable"
+      run: echo "printing variables $GITHUB_SHA ${{ steps.set_var.outputs.custom_local_variable }} and $custom_global_variable"
       shell: bash
 
       # Calling action.yaml from actions folder in our repository
