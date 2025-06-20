@@ -1,15 +1,18 @@
 on:
   push:
     branches: [ "main" ]
-#   workflow_run:
-#     workflows: ["testaction"]
-#     types:
-#       - completed
+  workflow_run:
+    workflows: ["testaction"]
+    types:
+      - completed
 jobs:
   dependent_job:
     runs-on: ubuntu-latest
     steps:
     - name: second workflow
       run: echo "this is executing after testaction workflow"
-    
-
+      # Calling action.yaml from actions folder in our repository
+    - name: calling action.yaml
+      uses: ./my-action
+      with:
+       name: "Manikanta"

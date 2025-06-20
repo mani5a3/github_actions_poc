@@ -1,9 +1,0 @@
-name: triggeractions
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-jobs:
-  call-reusable:
-    uses: ./.github/workflows/action.yaml
