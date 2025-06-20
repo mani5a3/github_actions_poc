@@ -8,6 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: second workflow
-      run: echo "this is test workflow2"
+      run: echo "this is executing after testaction workflow"
     
 

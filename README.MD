@@ -5,6 +5,7 @@ name: CI # name of the workflow it is optional
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
+  # Events https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows
   push:
     branches: [ "main" ]
   pull_request:
