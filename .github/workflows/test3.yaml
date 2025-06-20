@@ -6,4 +6,4 @@ on:
     branches: [ "main" ]
 jobs:
   call-reusable:
-    uses: ../../action.yaml
+    uses: ./action.yaml
