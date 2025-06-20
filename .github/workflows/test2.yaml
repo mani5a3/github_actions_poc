@@ -16,7 +16,7 @@ jobs:
       env:
         custom_local_variable: "hello this is local variable"
       id: set_var
-      run: echo "$custom_variable"
+      run: echo "$custom_local_variable"
       shell: bash
 
     - uses: actions/checkout@v4
