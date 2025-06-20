@@ -22,6 +22,7 @@ jobs:
           echo test, and deploy your project.
   deploy:
     runs-on: ubuntu-latest
+    # deploy job will trigger after build job completes
     needs: build
     steps:
       - name: Run a one-line script

@@ -1,8 +1,10 @@
 on:
-  workflow_run:
-    workflows: ["testaction"]
-    types:
-      - completed
+  push:
+    branches: [ "main" ]
+#   workflow_run:
+#     workflows: ["testaction"]
+#     types:
+#       - completed
 jobs:
   dependent_job:
     runs-on: ubuntu-latest
