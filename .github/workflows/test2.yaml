@@ -8,13 +8,26 @@ on:
 jobs:
   dependent_job:
     runs-on: ubuntu-latest
+    env:
+      custom_global_variable: "hello this is global variable"
+
     steps:
+    - name: setting up environment variable
+      env:
+        custom_local_variable: "hello this is local variable"
+      id: set_var
+      run: echo "Value is: $custom_variable"
+      shell: bash
+
     - uses: actions/checkout@v4
     - name: second workflow
       run: echo "this is executing after testaction workflow"
+
+      # printing default and custom environment variables
     - name: printing github hash
-      run: echo "printing github hash id $GITHUB_SHA"
+      run: echo "printing variables $GITHUB_SHA ${{ steps.set_var.outputs.custom_variable }} and $custom_global_variable"
       shell: bash
+
       # Calling action.yaml from actions folder in our repository
     - name: calling action.yaml
       uses: ./actions
