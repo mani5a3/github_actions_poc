@@ -83,4 +83,6 @@ on:
 
 One repository can contain many workflows but only 20 workflows can we running at same time
 Job concurrency is also limited depends on github license plan. for free tier it is 20 jobs per repository
+Jobs are limited to six hours of runtime
+Actions can't trigger workflows
 
