@@ -27,6 +27,10 @@ jobs:
     - name: printing github hash
       run: echo "printing variables $GITHUB_SHA ${{ steps.set_var.outputs.custom_local_variable }} and $custom_global_variable"
       shell: bash
+    
+    - name: Getting sensitive variables from repository
+      run: echo "$secrets.TEST_SECRET"
+      shell: bash
 
       # Calling action.yaml from actions folder in our repository
     - name: calling action.yaml
