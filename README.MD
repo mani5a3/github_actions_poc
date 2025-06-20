@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: CI # name of the workflow it is optional
 
 # Controls when the workflow will run
 on:
@@ -13,7 +13,7 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel but default is parallel 
 jobs:
   # This workflow contains a single job called "build"
   build:
@@ -34,3 +34,29 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+
+# Example to run sequential mode:
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Job 1"
+
+  job2:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Job 2"
+
+# Example to run parallel mode:
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Job 1"
+
+  job2:
+    runs-on: ubuntu-latest
+    needs: job1
+    steps:
+      - run: echo "Job 2"
