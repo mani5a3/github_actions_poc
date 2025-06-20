@@ -1,0 +1,16 @@
+name: triggeractions
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  action_same_repo:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: ./testaction.yaml
+  action_different_repo:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: mani5a3/testactionpoc@main
+      

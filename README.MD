@@ -84,5 +84,37 @@ on:
 One repository can contain many workflows but only 20 workflows can we running at same time
 Job concurrency is also limited depends on github license plan. for free tier it is 20 jobs per repository
 Jobs are limited to six hours of runtime
+Log file limited to 64 kb
+
 Actions can't trigger workflows
 
+# GitHub blocks workflow triggers if the push was done by another workflow using GITHUB_TOKEN
+Example: # .github/workflows/testaction.yml
+name: Test Action
+on:
+  workflow_dispatch:  # Trigger manually for test
+
+jobs:
+  simulate_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Make a file change
+        run: |
+          echo "Test at $(date)" >> testtrigger.txt
+
+      - name: Commit & Push using GITHUB_TOKEN
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add testtrigger.txt
+          git commit -m "test commit from action"
+          git push
+
+# To achieve above one we need to use personal access token
+      - name: Push using PAT
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
+          git push

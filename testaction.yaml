@@ -1,0 +1,30 @@
+name: test
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  job1:
+    name: firstjob
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: This is first job in same repo
+      run: date
+  job2:
+    name: secondjob
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: This is second job in same repo
+      run: date
+  job3:
+    name: thirdjob
+    needs: [ "job1", "job2" ]
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: This is third job in same repo
+      run: date
