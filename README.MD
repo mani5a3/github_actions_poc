@@ -60,3 +60,20 @@ jobs:
     needs: job1
     steps:
       - run: echo "Job 2"
+
+# if we have multiple yaml files/workflows under .github/workflows following is the order it will follow.
+
+| Situation                         | Sequence                       |
+| --------------------------------- | ------------------------------ |
+| Multiple `.yml` with same trigger | No sequence — run in parallel  |
+| Jobs in one `.yml` with `needs:`  | Runs sequentially as defined   |
+| Use `workflow_run`                | Can trigger workflows in order |
+
+
+# deploy.yml
+on:
+  workflow_run:
+    workflows: ["Build"]
+    types:
+      - completed
+
