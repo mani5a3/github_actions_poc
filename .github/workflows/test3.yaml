@@ -8,9 +8,11 @@ jobs:
   action_same_repo:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v4
     - uses: ./testaction.yaml
   action_different_repo:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v4
     - uses: mani5a3/testactionpoc@main
       
