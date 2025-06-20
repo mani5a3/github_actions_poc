@@ -11,9 +11,10 @@ jobs:
     steps:
     - name: second workflow
       run: echo "this is executing after testaction workflow"
+    - run: echo "printing github hash id ${{ env.GITHUB_SHA }} "
       # Calling action.yaml from actions folder in our repository
     - uses: actions/checkout@v4
     - name: calling action.yaml
       uses: ./actions
-      with:
+      with: # Passing arguments to action
        name: "Manikanta"
