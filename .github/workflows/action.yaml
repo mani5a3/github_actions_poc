@@ -1,9 +1,6 @@
 name: test
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_call:   # ✅ must be present to allow calling from other workflows
   
 
 jobs:
