@@ -13,6 +13,6 @@ jobs:
       run: echo "this is executing after testaction workflow"
       # Calling action.yaml from actions folder in our repository
     - name: calling action.yaml
-      uses: ./my-action
+      uses: ./actions
       with:
        name: "Manikanta"
