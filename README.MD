@@ -1,3 +1,5 @@
+# BUILD/WORKFLOW STATUS BADGE: ![](https://github.com/mani5a3/github_actions_poc/workflows/testaction/badge.svg)
+
 # This is a basic workflow to help you get started with Actions
 
 name: CI # name of the workflow it is optional
