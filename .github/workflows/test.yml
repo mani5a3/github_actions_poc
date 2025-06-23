@@ -1,8 +1,8 @@
 name: testaction
 on:
   push:
-     branches: [ "main" ]
-  pull_request:
+       branches: [ "main" ]
+  pull_requests:
     branches: [ "main" ]
   #workflow_dispatch:
 jobs:

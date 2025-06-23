@@ -124,6 +124,7 @@ jobs:
 # workflow attributes
 workflow_run - it will trigger dependent workflow first and after completing it will trigger current workflow
 workflow_call - if you want reuse the workflow you need to mention this
+
 workflow_dispatch - if you want to manually trigger the workflow then we can put this in yaml file
 
 
