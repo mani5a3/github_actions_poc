@@ -1,0 +1,39 @@
+name: environment_variables
+on:
+  push:
+    branches:
+      - main
+env:
+  WORKFLOW_VAR: Workflow_Level_Scope # you can access this variable in workspace level
+
+jobs:
+  job-1:
+    runs-on: ubuntu-latest
+    env:
+      JOB_VAR: JOB_1_Scoped # you cannot access this variable in another job
+    steps:
+      - name: printing variables of job1 and step1
+        env:
+          STEP_VAR: Step_Scoped  #you cannot access the variable in next step
+        run: |
+          echo "Workflow level variable: $WORKFLOW_VAR"
+          echo "Job1 level variable: $JOB_VAR"
+          echo "Step1 level variable: $STEP_VAR"
+
+      - name: printing varibles of job1 and step1
+        run: |
+          echo "Workflow level variable: $WORKFLOW_VAR"
+          echo "Job1 level variable: $JOB_VAR"
+          echo "Step1 level variable: $STEP_VAR"
+
+  job-2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: printing variables of job1 and step1
+        run: |
+          echo "Workflow level variable: $WORKFLOW_VAR"
+          echo "Job1 level variable: $JOB_VAR"
+          echo "Step1 level variable: $STEP_VAR"
+        
+
+      
