@@ -12,6 +12,8 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  schedule:
+  - cron '* * * * *' #schedule github workflow to trigger on timely basis
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:

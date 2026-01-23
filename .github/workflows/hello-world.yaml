@@ -1,0 +1,10 @@
+name: github-actions-poc
+on:
+  workflow_dispatch:
+
+jobs:
+  Hello-world:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "this is hello world example for github action poc"
+  
