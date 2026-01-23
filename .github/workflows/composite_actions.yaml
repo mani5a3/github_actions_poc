@@ -1,12 +1,12 @@
 #Composite Action = Reusable group of steps packaged as one action
 
 
-name: Build App
+name: composte_action
 
 on: workflow_dispatch
 
 jobs:
-  build:
+  composite-action-job:
     runs-on: [self-hosted, vagrant]
 
     steps:
