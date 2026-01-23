@@ -1,0 +1,28 @@
+#A matrix lets one job run in parallel variations by changing variables like
+#Instead of writing 5 separate jobs, you write one job and GitHub creates multiple runs.
+
+name: Matrix - Hosted + Self Hosted
+
+on: workflow_dispatch
+
+jobs:
+  matrix_job:
+    strategy:
+      matrix:
+        include:
+          # GitHub-hosted runners
+          - os: ubuntu-latest
+            runner: ubuntu-latest
+
+          # Self-hosted runner (your Vagrant VM)
+          - os: ubuntu-focal
+            runner: [self-hosted, vagrant, ubuntu-focal]
+
+    runs-on: ${{ matrix.runner }}
+
+    steps:
+      - name: Show where we are running
+        run: |
+          echo "OS label: ${{ matrix.os }}"
+          echo "Runner: $RUNNER_NAME"
+          uname -a || ver
