@@ -8,8 +8,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup checkout
-      uses: actions/setup-node@v6
     - name: setup java
       uses: actions/setup-java@v5
       with:

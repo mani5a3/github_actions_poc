@@ -10,7 +10,9 @@ jobs:
     runs-on: [self-hosted, vagrant]
 
     steps:
-      - name: Run composite action
-        uses: ./.github/actions/setup-java-app
-        with:
-          java-version: 8
+    - name: Setup checkout
+      uses: actions/setup-node@v6
+    - name: Run composite action
+      uses: ./.github/actions/setup-java-app
+      with:
+        java-version: 8
