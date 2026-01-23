@@ -7,4 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "this is hello world example for github action poc"
-  
+      - run: echo "this is job1"
+  Hello-world2:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "this is job2"
