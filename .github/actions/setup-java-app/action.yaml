@@ -13,6 +13,5 @@ runs:
       with:
         distribution: 'temurin' # See 'Supported distributions' for available options
         java-version: ${{ inputs.java-version}}
-        cache: maven
 
 
