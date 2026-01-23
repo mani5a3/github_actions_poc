@@ -1,0 +1,21 @@
+name: "Setup java App"
+
+inputs:
+  java-version:
+    description: "java version version"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup checkout
+      uses: actions/setup-node@v6
+    - name: setup java
+      uses: actions/setup-java@v5
+      with:
+        distribution: 'temurin' # See 'Supported distributions' for available options
+        java-version: ${{ inputs.java-version}}
+        cache: maven
+
+
+

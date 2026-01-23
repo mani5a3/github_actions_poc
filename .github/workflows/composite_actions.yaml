@@ -1,0 +1,16 @@
+#Composite Action = Reusable group of steps packaged as one action
+
+
+name: Build App
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: [self-hosted, vagrant]
+
+    steps:
+      - name: Run composite action
+        uses: ./.github/actions/setup-java-app
+        with:
+          java-version: 8
