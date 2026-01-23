@@ -3,12 +3,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  Hello-world:
+  run-bash:
     runs-on: ubuntu-latest
     steps:
       - run: echo "this is hello world example for github action poc"
-      - run: echo "this is job1"
-  Hello-world2:
+  run-python:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "this is job2"
+      - run: print("this is example python run")
+        shell: python
