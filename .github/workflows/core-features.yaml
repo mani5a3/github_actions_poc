@@ -3,14 +3,9 @@ on:
   push:
     branches:
       - main
-      
+
 jobs:
   run-bash:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "this is hello world example for github action poc"
-  run-python:
-    runs-on: ubuntu-latest
-    steps:
-      - run: print("this is example python run")
-        shell: python
+      - run: echo "this code runs because of push event"
