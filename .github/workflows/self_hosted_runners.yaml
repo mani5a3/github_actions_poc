@@ -12,4 +12,4 @@ jobs:
     runs-on: [self-hosted, ubuntu-focal]
     steps:
       - run: print("this is running on self hosted runner with label of ubuntu-focal")
-        shell: python3
+        shell: python
