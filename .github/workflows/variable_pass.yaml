@@ -1,0 +1,20 @@
+name: Pass_Variables_Between_Jobs
+on:
+  workflow_dispatch:
+
+jobs:
+  Job1:
+    runs-on: ubuntu-latest
+    outputs:
+      my_var: ${{ steps.setvar.outputs.my_var }}
+    steps:
+      - name: Set variable
+        id: setvar
+        run: echo "my_var=Job1_Value" >> $GITHUB_OUTPUT
+
+  Job2:
+    runs-on: ubuntu-latest
+    needs: job1
+    steps:
+      - name: Use variable from job1
+        run: echo "Value is ${{ needs.job1.outputs.my_var }}"

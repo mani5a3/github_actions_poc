@@ -1,8 +1,6 @@
 name: environment_variables
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 env:
   WORKFLOW_VAR: Workflow_Level_Scope # you can access this variable in workspace level
 
