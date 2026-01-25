@@ -1,0 +1,66 @@
+name: java-maven-gradle-workflow
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      java_version:
+        description: "Java version to use"
+        required: true
+        type: string
+      build_tool:
+        description: "select the build tool whether it is maven or gradle"
+        type: string
+        required: true
+      maven_goals:
+        description: "Maven goals to run (e.g. clean install)"
+        required: false
+        default: "clean install"
+        type: string
+    secrets:
+      Jfrog_Username:
+        required: true
+      Jfrog_Password:
+        required: true
+      Sonar_username:
+        required: true
+      Sonar_password:
+        required: true
+
+
+jobs:
+  build_and_deploy:
+    runs-on: [self-hosted, windows]
+    steps:
+    - name: checkout the repository
+      uses: actions/checkout@v5
+
+    - name: install dependencies
+      uses: actions/setup-java@v4
+      with: 
+        java-version: ${{ inputs.java_version }}
+        distribution: 'temurin'
+        cache: ${{ inputs.build_tool }}
+  
+    - name: Install dependencies
+      run: |
+        if [ "${{ inputs.build_tool }}" = "maven" ]; then
+          mvn -B dependency:resolve
+        else
+          ./gradlew dependencies
+    
+    - name: compile the code
+      run: |
+        if [ "${{ inputs.build_tool }}" = "maven" ]; then
+          mvn compile
+        else
+          ./gradlew build -x test
+    
+    - name: sonar static code analysis
+      run: |
+            C:\\softwares\\sonar-scanner-4.1.0.1829-windows\\bin\\sonar-scanner \
+            -Dsonar.projectKey=my-project \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=http://localhost:9000 \
+            -Dsonar.login=${{ inputs.Sonar_username }} \
+            -Dsonar.password=${{ inputs.Sonar_password }} \
+            -Dsonar.java.binaries=**/target/classes

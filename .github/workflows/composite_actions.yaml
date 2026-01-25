@@ -1,5 +1,6 @@
 #Composite Action = Reusable group of steps packaged as one action
-
+#actions/setup-java sets up Java for workflow steps, not the VM globally
+#Composite actions are step-level reusable units
 
 name: composte_action
 
