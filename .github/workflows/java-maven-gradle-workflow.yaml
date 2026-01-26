@@ -25,9 +25,9 @@ on:
         required: true
       Jfrog_Password:
         required: true
-      Sonar_username:
+      Sonar_Username:
         required: true
-      Sonar_password:
+      Sonar_Password:
         required: true
 
 
@@ -65,6 +65,6 @@ jobs:
             -Dsonar.projectKey=my-project \
             -Dsonar.sources=. \
             -Dsonar.host.url=http://localhost:9000 \
-            -Dsonar.login=${{ inputs.Sonar_username }} \
-            -Dsonar.password=${{ inputs.Sonar_password }} \
+            -Dsonar.login=${{ inputs.Sonar_Username }} \
+            -Dsonar.password=${{ inputs.Sonar_Password }} \
             -Dsonar.java.binaries=**/target/classes
