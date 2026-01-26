@@ -47,22 +47,22 @@ jobs:
         cache: ${{ inputs.build_tool }}
 
     - name: Install dependencies
-      shell: bash
+      shell: pwsh
       run: |
-        if [ "${{ inputs.build_tool }}" = "maven" ]; then
+        if ("${{ inputs.build_tool }}" -eq "maven") {
           mvn -B dependency:resolve
-        else
+        } else {
           ./gradlew dependencies
-        fi
+        }
 
     - name: compile the code
-      shell: bash
+      shell: pwsh
       run: |
-        if [ "${{ inputs.build_tool }}" = "maven" ]; then
+        if ("${{ inputs.build_tool }}" -eq "maven") {
           mvn compile
         else
           ./gradlew build -x test
-        fi
+        }
 
     - name: sonar static code analysis
       shell: powershell
