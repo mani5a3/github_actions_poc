@@ -49,7 +49,7 @@ jobs:
 
     - name: install maven dependencies
       if: ${{ inputs.build_tool == 'maven' }}
-      run: ./gradlew build -x test
+      run:  mvn -B dependency:resolve
 
     - name: install gradle dependencies
       if: ${{ inputs.build_tool == 'gradle' }}
