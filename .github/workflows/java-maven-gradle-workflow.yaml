@@ -47,13 +47,13 @@ jobs:
         cache: ${{ inputs.build_tool }}
 
 
-    - name: install maven dependencies
-      if: ${{ inputs.build_tool == 'maven' }}
-      run:  mvn -B dependency:resolve
+    # - name: install maven dependencies
+    #   if: ${{ inputs.build_tool == 'maven' }}
+    #   run:  mvn -B dependency:resolve
 
-    - name: install gradle dependencies
-      if: ${{ inputs.build_tool == 'gradle' }}
-      run: ./gradlew dependencies
+    # - name: install gradle dependencies
+    #   if: ${{ inputs.build_tool == 'gradle' }}
+    #   run: ./gradlew dependencies
 
     - name: compile the maven code
       if: ${{ inputs.build_tool == 'maven' }}
