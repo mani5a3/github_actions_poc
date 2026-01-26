@@ -33,7 +33,7 @@ on:
 
 jobs:
   build_and_deploy:
-    runs-on: ${{ inputs.runner }}
+    runs-on: [self-hosted, ${{ inputs.runner }}]
     steps:
     - name: checkout the repository
       uses: actions/checkout@v5
