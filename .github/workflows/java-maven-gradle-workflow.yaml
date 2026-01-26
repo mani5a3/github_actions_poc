@@ -46,11 +46,13 @@ jobs:
         cache: ${{ inputs.build_tool }}
   
     - name: Install dependencies
+      shell: bash
       run: |
         if [ "${{ inputs.build_tool }}" = "maven" ]; then
           mvn -B dependency:resolve
         else
           ./gradlew dependencies
+        fi
     
     - name: compile the code
       run: |
@@ -58,6 +60,7 @@ jobs:
           mvn compile
         else
           ./gradlew build -x test
+        fi
     
     - name: sonar static code analysis
       run: |
