@@ -20,6 +20,7 @@ on:
         required: false
         default: "clean install"
         type: string
+    secrets:
       Jfrog_Username:
         required: true
         type: string
@@ -32,19 +33,6 @@ on:
       Sonar_Password:
         required: true
         type: string
-    # secrets:
-    #   Jfrog_Username:
-    #     required: true
-    #     type: string
-    #   Jfrog_Password:
-    #     required: true
-    #     type: string
-    #   Sonar_Username:
-    #     required: true
-    #     type: string
-    #   Sonar_Password:
-    #     required: true
-    #     type: string
 
 
 
@@ -87,6 +75,6 @@ jobs:
             -Dsonar.projectKey=my-project \
             -Dsonar.sources=. \
             -Dsonar.host.url=http://localhost:9000 \
-            -Dsonar.login=${{ inputs.Sonar_Username }} \
-            -Dsonar.password=${{ inputs.Sonar_Password }} \
+            -Dsonar.login=${{ secrets.Sonar_Username }} \
+            -Dsonar.password=${{ secrets.Sonar_Password }} \
             -Dsonar.java.binaries=**/target/classes
