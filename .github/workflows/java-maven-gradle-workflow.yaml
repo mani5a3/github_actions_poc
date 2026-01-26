@@ -73,4 +73,5 @@ jobs:
           -D"sonar.host.url=http://localhost:9000" `
           -D"sonar.login=${{ secrets.Sonar_Username }}" `
           -D"sonar.password=${{ secrets.Sonar_Password }}" `
-          -D"sonar.java.binaries=**/target/classes"
+          -D"sonar.java.binaries=**/target/classes" `
+          -D"sonar.tests=src/test/java"
