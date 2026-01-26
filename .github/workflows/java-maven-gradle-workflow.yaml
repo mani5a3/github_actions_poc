@@ -3,6 +3,10 @@ on:
   workflow_dispatch:
   workflow_call:
     inputs:
+      runner:
+        description: "Runner to use"
+        required: true
+        type: string
       java_version:
         description: "Java version to use"
         required: true
@@ -29,7 +33,7 @@ on:
 
 jobs:
   build_and_deploy:
-    runs-on: [self-hosted, windows]
+    runs-on: ${{ inputs.runner }}
     steps:
     - name: checkout the repository
       uses: actions/checkout@v5
