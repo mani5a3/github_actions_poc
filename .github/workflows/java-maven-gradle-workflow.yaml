@@ -77,9 +77,9 @@ jobs:
       shell: powershell
       run: |
         C:\softwares\sonar-scanner-4.1.0.1829-windows\bin\sonar-scanner.bat `
-          -D"sonar.projectKey=${{ secrets.Sonar_ProjectKey }}" `
-          -D"sonar.projectName=${{ secrets.Sonar_ProjectName }}" `
-          -D"sonar.projectVersion=${{ secrets.Sonar_ProjectVersion }}" `
+          -D"sonar.projectKey=${{ inputs.Sonar_ProjectKey }}" `
+          -D"sonar.projectName=${{ inputs.Sonar_ProjectName }}" `
+          -D"sonar.projectVersion=${{ inputs.Sonar_ProjectVersion }}" `
           -D"sonar.sources=." `
           -D"sonar.host.url=http://localhost:9000" `
           -D"sonar.login=${{ secrets.Sonar_Username }}" `
