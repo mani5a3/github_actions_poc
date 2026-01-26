@@ -46,30 +46,31 @@ jobs:
         distribution: 'temurin'
         cache: ${{ inputs.build_tool }}
 
-    # - name: Install dependencies
-    #   shell: powershell
-    #   run: |
-    #     if ("${{ inputs.build_tool }}" -eq "maven") {
-    #       mvn -B dependency:resolve
-    #     } else {
-    #       ./gradlew dependencies
-    #     }
+
+    - name: install maven dependencies
+      if: ${{ inputs.build_tool == 'maven' }}
+      run: ./gradlew build -x test
+
+    - name: install gradle dependencies
+      if: ${{ inputs.build_tool == 'gradle' }}
+      run: ./gradlew dependencies
+
     - name: compile the maven code
       if: ${{ inputs.build_tool == 'maven' }}
       run: mvn compile
 
     - name: compile the gradle code
       if: ${{ inputs.build_tool == 'gradle' }}
-      run: ./gradlew dependencies
+      run: ./gradlew build -x test
 
 
     - name: sonar static code analysis
       shell: powershell
       run: |
-        C:\\softwares\\sonar-scanner-4.1.0.1829-windows\\bin\\sonar-scanner `
-          -Dsonar.projectKey=my-project `
-          -Dsonar.sources=. `
-          -Dsonar.host.url=http://localhost:9000 `
-          -Dsonar.login=${{ secrets.Sonar_Username }} `
-          -Dsonar.password=${{ secrets.Sonar_Password }} `
-          -Dsonar.java.binaries=**/target/classes
+        C:\softwares\sonar-scanner-4.1.0.1829-windows\bin\sonar-scanner.bat `
+          -D"sonar.projectKey=${{ secrets.Sonar_ProjectKey }}" `
+          -D"sonar.sources=." `
+          -D"sonar.host.url=http://localhost:9000" `
+          -D"sonar.login=${{ secrets.Sonar_Username }}" `
+          -D"sonar.password=${{ secrets.Sonar_Password }}" `
+          -D"sonar.java.binaries=**/target/classes"
