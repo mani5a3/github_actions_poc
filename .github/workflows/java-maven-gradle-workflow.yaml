@@ -23,12 +23,17 @@ on:
     secrets:
       Jfrog_Username:
         required: true
+        type: string
       Jfrog_Password:
         required: true
+        type: string
       Sonar_Username:
         required: true
+        type: string
       Sonar_Password:
         required: true
+        type: string
+
 
 
 jobs:
@@ -55,6 +60,7 @@ jobs:
         fi
     
     - name: compile the code
+      shell: bash
       run: |
         if [ "${{ inputs.build_tool }}" = "maven" ]; then
           mvn compile
@@ -63,6 +69,7 @@ jobs:
         fi
     
     - name: sonar static code analysis
+      shell: powershell
       run: |
             C:\\softwares\\sonar-scanner-4.1.0.1829-windows\\bin\\sonar-scanner \
             -Dsonar.projectKey=my-project \
