@@ -59,7 +59,7 @@ jobs:
       shell: powershell
       run: |
         if ("${{ inputs.build_tool }}" -eq "maven") {
-          mvn compile
+          mvn ${{ inputs.maven_goals }}
         else
           ./gradlew build -x test
         }
