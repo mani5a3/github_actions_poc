@@ -66,7 +66,7 @@ jobs:
 
     - name: compile the maven code
       if: ${{ inputs.build_tool == 'maven' }}
-      run: mvn clean verify
+      run: mvn clean test jacoco:report
 
     - name: compile the gradle code
       if: ${{ inputs.build_tool == 'gradle' }}
@@ -77,16 +77,15 @@ jobs:
       shell: powershell
       run: |
        C:\softwares\sonar-scanner-4.1.0.1829-windows\bin\sonar-scanner.bat `
-        -D"sonar.projectKey=${{ inputs.Sonar_ProjectKey }}" `
-        -D"sonar.projectName=${{ inputs.Sonar_ProjectName }}" `
-        -D"sonar.projectVersion=${{ inputs.Sonar_ProjectVersion }}" `
-        -D"sonar.java.source=8" `
-        -D"sonar.host.url=http://localhost:9000" `
-        -D"sonar.login=${{ secrets.Sonar_Username }}" `
-        -D"sonar.password=${{ secrets.Sonar_Password }}" `
-        -D"sonar.sources=gameoflife-core/src/main/java,gameoflife-web/src/main/java" `
-        -D"sonar.tests=gameoflife-core/src/test/java,gameoflife-web/src/test/java" `
-        -D"sonar.java.binaries=gameoflife-core/target/classes,gameoflife-web/target/classes" `
-        -D"sonar.java.test.binaries=gameoflife-core/target/test-classes,gameoflife-web/target/test-classes" `
-        -D"sonar.junit.reportPaths=**/target/surefire-reports" `
-        -D"sonar.coverage.jacoco.xmlReportPaths=gameoflife-web/target/site/jacoco/jacoco.xml" `
+        -Dsonar.projectKey=${{ inputs.Sonar_ProjectKey }} `
+        -Dsonar.projectName=${{ inputs.Sonar_ProjectName }} `
+        -Dsonar.projectVersion=${{ inputs.Sonar_ProjectVersion }} `
+        -Dsonar.host.url=http://localhost:9000 `
+        -Dsonar.login=${{ secrets.Sonar_Username }} `
+        -Dsonar.password=${{ secrets.Sonar_Password }} `
+        -Dsonar.sources=gameoflife-core/src/main/java,gameoflife-web/src/main/java `
+        -Dsonar.tests=gameoflife-core/src/test/java,gameoflife-web/src/test/java `
+        -Dsonar.java.binaries=gameoflife-core/target/classes,gameoflife-web/target/classes `
+        -Dsonar.java.test.binaries=gameoflife-core/target/test-classes,gameoflife-web/target/test-classes `
+        -Dsonar.junit.reportPaths=**/target/surefire-reports `
+        -Dsonar.coverage.jacoco.xmlReportPaths=**/target/site/jacoco/jacoco.xml
