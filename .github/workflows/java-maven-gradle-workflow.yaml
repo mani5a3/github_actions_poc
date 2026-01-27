@@ -85,5 +85,4 @@ jobs:
           -D"sonar.login=${{ secrets.Sonar_Username }}" `
           -D"sonar.password=${{ secrets.Sonar_Password }}" `
           -D"sonar.java.binaries=**/target/classes" `
-          -D"sonar.tests=" `
           -D"sonar.coverage.jacoco.xmlReportPaths=gameoflife-web/target/jacoco-report/jacoco.xml"
