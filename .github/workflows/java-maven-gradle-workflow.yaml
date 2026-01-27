@@ -66,7 +66,7 @@ jobs:
 
     - name: compile the maven code
       if: ${{ inputs.build_tool == 'maven' }}
-      run: mvn clean verify sonar:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=admin -Dsonar.password=admin
+      run: mvn clean verify  org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=admin -Dsonar.password=admin
     - name: compile the gradle code
       if: ${{ inputs.build_tool == 'gradle' }}
       run: ./gradlew build -x test
