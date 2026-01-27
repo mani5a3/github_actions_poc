@@ -63,10 +63,16 @@ jobs:
     # - name: install gradle dependencies
     #   if: ${{ inputs.build_tool == 'gradle' }}
     #   run: ./gradlew dependencies
-
-    - name: compile the maven code
+    - name: SonarQube analysis (Maven)
       if: ${{ inputs.build_tool == 'maven' }}
-      run: mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=admin -Dsonar.password=admin
+      shell: powershell
+      run: |
+        mvn clean verify `
+          org.sonarsource.scanner.maven:sonar-maven-plugin:sonar `
+          -Dsonar.host.url=http://localhost:9000 `
+          -Dsonar.login=admin `
+          -Dsonar.password=admin
+          
     - name: compile the gradle code
       if: ${{ inputs.build_tool == 'gradle' }}
       run: ./gradlew build -x test
