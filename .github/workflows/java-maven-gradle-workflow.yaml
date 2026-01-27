@@ -80,10 +80,10 @@ jobs:
           -D"sonar.projectKey=${{ inputs.Sonar_ProjectKey }}" `
           -D"sonar.projectName=${{ inputs.Sonar_ProjectName }}" `
           -D"sonar.projectVersion=${{ inputs.Sonar_ProjectVersion }}" `
-          -D"sonar.sources=gameoflife-web/src/main/java" `
+          -D"sonar.sources=gameoflife-core/src/main/java,gameoflife-web/src/main/java" `
           -D"sonar.host.url=http://localhost:9000" `
           -D"sonar.login=${{ secrets.Sonar_Username }}" `
           -D"sonar.password=${{ secrets.Sonar_Password }}" `
           -D"sonar.java.binaries=**/target/classes" `
-          -D"sonar.tests=gameoflife-web/src/test/java" `
-          -D"sonar.coverage.jacoco.xmlReportPaths=gameoflife-web/target/jacoco-report/jacoco.xml"
+          -D"sonar.tests=gameoflife-core/src/main/java,gameoflife-web/src/main/java" `
+          -D"sonar.coverage.jacoco.xmlReportPaths=**/target/jacoco-report/jacoco.xml"
