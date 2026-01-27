@@ -87,4 +87,4 @@ jobs:
           -D"sonar.java.binaries=gameoflife-core/target/classes,gameoflife-web/target/classes" `
           -D"sonar.java.test.binaries=gameoflife-core/target/test-classes,gameoflife-web/target/test-classes" `
           -D"sonar.tests=gameoflife-core/src/test/java,gameoflife-web/src/test/java,gameoflife-acceptance-tests/src/test/java" `
-          -D"sonar.coverage.jacoco.xmlReportPaths=gameoflife-web/target/jacoco-report/jacoco.xml"
+          -D"sonar.coverage.jacoco.xmlReportPaths=gameoflife-web/target/site/jacoco/jacoco.xml"
