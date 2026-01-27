@@ -89,3 +89,4 @@ jobs:
         -D"sonar.java.binaries=target/classes" `
         -D"sonar.jacoco.reportPaths=target/jacoco.exec" `
         -D"sonar.junit.reportPaths=target/surefire-reports"
+        -D"sonar.java.libraries=target/dependency/*.jar"
