@@ -89,16 +89,16 @@ jobs:
     - name: sonar static code analysis
       shell: powershell
       run: |
-       C:\softwares\sonar-scanner-4.8.0.2856-windows\bin\sonar-scanner.bat `
-        -D"sonar.projectKey=${{ inputs.Sonar_ProjectKey }}" `
-        -D"sonar.projectName=${{ inputs.Sonar_ProjectName }}" `
-        -D"sonar.projectVersion=${{ inputs.Sonar_ProjectVersion }}" `
-        -D"sonar.java.source=${{ inputs.Sonar_JavaSource }}" ` 
-        -D"sonar.host.url=${{ inputs.Sonar_HostUrl }}" `
-        -D"sonar.login=${{ secrets.Sonar_Username }}" `
-        -D"sonar.password=${{ secrets.Sonar_Password }}" `
-        -D"sonar.sources=${{ inputs.Sonar_sources }}" `
-        -D"sonar.tests=${{ inputs.Sonar_tests }}" `
-        -D"sonar.java.binaries=${{ inputs.Sonar_Javabinaries }}" ` 
-        -D"sonar.coverage.jacoco.xmlReportPaths=${{ inputs.Sonar_Jacaco_ReportPaths }}" `
-        -D"sonar.junit.reportPaths=${{ inputs.Sonar_Junit_ReportPaths }}" `
+        C:\softwares\sonar-scanner-4.8.0.2856-windows\bin\sonar-scanner.bat `
+          -Dsonar.projectKey=${{ inputs.Sonar_ProjectKey }} `
+          -Dsonar.projectName=${{ inputs.Sonar_ProjectName }} `
+          -Dsonar.projectVersion=${{ inputs.Sonar_ProjectVersion }} `
+          -Dsonar.java.source=${{ inputs.Sonar_JavaSource }} `
+          -Dsonar.host.url=${{ inputs.Sonar_HostUrl }} `
+          -Dsonar.login=${{ secrets.Sonar_Username }} `
+          -Dsonar.password=${{ secrets.Sonar_Password }} `
+          -Dsonar.sources=${{ inputs.Sonar_sources }} `
+          -Dsonar.tests=${{ inputs.Sonar_tests }} `
+          -Dsonar.java.binaries=${{ inputs.Sonar_Javabinaries }} `
+          -Dsonar.coverage.jacoco.xmlReportPaths=${{ inputs.Sonar_Jacaco_ReportPaths }} `
+          -Dsonar.junit.reportPaths=${{ inputs.Sonar_Junit_ReportPaths }}
