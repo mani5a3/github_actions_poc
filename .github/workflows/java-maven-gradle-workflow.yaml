@@ -76,7 +76,7 @@ jobs:
     - name: sonar static code analysis
       shell: powershell
       run: |
-       C:\softwares\sonar-scanner-4.1.0.1829-windows\bin\sonar-scanner.bat `
+       C:\softwares\sonar-scanner-4.8.0.2856-windows\bin\sonar-scanner.bat `
         -D"sonar.projectKey=${{ inputs.Sonar_ProjectKey }}" `
         -D"sonar.projectName=${{ inputs.Sonar_ProjectName }}" `
         -D"sonar.projectVersion=${{ inputs.Sonar_ProjectVersion }}" `
