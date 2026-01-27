@@ -84,5 +84,6 @@ jobs:
         -D"sonar.host.url=http://localhost:9000" `
         -D"sonar.login=${{ secrets.Sonar_Username }}" `
         -D"sonar.password=${{ secrets.Sonar_Password }}" `
-        -D"sonar.java.binaries=gameoflife-core/target/classes,gameoflife-web/target/test-classes" `
+        -D"sonar.java.binaries=gameoflife-core/target/classes,gameoflife-core/target/test-classes,gameoflife-acceptance-tests/target/test-classes,gameoflife-web/target/test-classes" `
+        -D"sonar.junit.reportPaths=**/target/surefire-reports" `
         -D"sonar.coverage.jacoco.xmlReportPaths=gameoflife-web/target/site/jacoco/jacoco.xml"
