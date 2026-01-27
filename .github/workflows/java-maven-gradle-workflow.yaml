@@ -86,5 +86,5 @@ jobs:
         -D"sonar.password=${{ secrets.Sonar_Password }}" `
         -D"sonar.sources=src/main/java" `
         -D"sonar.tests=src/test/java" `
-        -D"sonar.java.binaries=**/target/classes" `
-        -D"sonar.coverage.jacoco.xmlReportPaths=**/target/site/jacoco/jacoco.xml" `
+        -D"sonar.java.binaries=target/classes" `
+        -D"sonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml" `
