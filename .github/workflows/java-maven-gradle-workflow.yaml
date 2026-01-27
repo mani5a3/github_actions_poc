@@ -86,4 +86,5 @@ jobs:
         -D"sonar.password=${{ secrets.Sonar_Password }}" `
         -D"sonar.java.binaries=gameoflife-core/target/classes,gameoflife-core/target/test-classes,gameoflife-acceptance-tests/target/test-classes,gameoflife-web/target/test-classes" `
         -D"sonar.junit.reportPaths=**/target/surefire-reports" `
+        -D"sonar.tests=gameoflife-core/src/test/java,gameoflife-web/src/test/java,gameoflife-acceptance-tests/src/test/java" `
         -D"sonar.coverage.jacoco.xmlReportPaths=gameoflife-web/target/site/jacoco/jacoco.xml"
