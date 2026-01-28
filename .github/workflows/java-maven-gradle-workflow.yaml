@@ -101,7 +101,7 @@ jobs:
 
     - name: SonarQualityGate
       #Calling composite action
-      uses: ./.github/actions/sonar-quality-gate
+      uses: mani5a3/github_actions_poc/.github/actions/sonar-quality-gate@main
       with:
         sonar_host_url: ${{ secrets.Sonar_HostUrl }}
         sonar_token: ${{ secrets.Sonar_Token }}

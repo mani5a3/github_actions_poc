@@ -1,6 +1,14 @@
-name: "Sonar Quality Gate"
+name: "Sonar Quality Gate for windows and linux"
 description: "Run SonarQube quality gate check"
 
+inputs:
+  sonar_host_url:
+    description: "SonarQube Host URL"
+    required: true
+  sonar_token:
+    description: "SonarQube API Token"
+    required: true
+    
 runs:
   using: "composite"
   steps:
