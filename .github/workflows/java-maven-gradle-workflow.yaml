@@ -106,70 +106,68 @@ jobs:
         SONAR_TOKEN: ${{ secrets.Sonar_Token }}
         SONAR_HOST_URL: ${{ secrets.Sonar_HostUrl }}
       run: |
-        Write-Host "Starting SonarQube Quality Gate check..."
-
-        # Path to the Sonar report
+        # Ensure report exists
         $reportPath = ".scannerwork/report-task.txt"
         if (-not (Test-Path $reportPath)) {
-            Write-Error "Sonar report file not found: $reportPath"
+            Write-Error "Report file not found: $reportPath"
             exit 1
         }
 
-        Write-Host "Reading Sonar report..."
-        $reportLines = Get-Content $reportPath
+        # Read report task file
+        $lines = Get-Content $reportPath
 
-        # Extract CE Task URL
-        $ceTaskUrlLine = $reportLines | Where-Object { $_ -like "ceTaskUrl*" }
-        if (-not $ceTaskUrlLine) {
-            Write-Error "Could not find ceTaskUrl in report"
+        # Extract Compute Engine URL
+        $ceLine = $lines | Where-Object { $_ -like "ceTaskUrl*" }
+        if (-not $ceLine) {
+            Write-Error "ceTaskUrl not found"
             exit 1
         }
-        $ceTaskUrl = $ceTaskUrlLine -replace "ceTaskUrl=", ""
-        Write-Host "CE Task URL: $ceTaskUrl"
+        $ceUrl = $ceLine -replace "ceTaskUrl=", ""
 
-        # Prepare authentication header
-        $authHeader = @{
-            Authorization = "Basic " + [Convert]::ToBase64String(
-                [Text.Encoding]::ASCII.GetBytes("$($env:SONAR_TOKEN):")
-            )
-        }
+        Write-Host "Polling Sonar Compute Engine at: $ceUrl"
 
-        Write-Host "Waiting for analysis to complete..."
-        $status = ""
+        # Prepare Basic Auth for Sonar
+        $pair = "$($env:SONAR_TOKEN):"
+        $bytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
+        $base64 = [System.Convert]::ToBase64String($bytes)
+        $headers = @{ Authorization = "Basic $base64" }
 
-        do {
+        # Poll until analysis finishes
+        $continue = $true
+        while ($continue) {
             Start-Sleep -Seconds 5
             try {
-                $taskResponse = Invoke-RestMethod -Uri $ceTaskUrl -Headers $authHeader
+                $taskResponse = Invoke-RestMethod -Uri $ceUrl -Headers $headers
                 $status = $taskResponse.task.status
-                Write-Host "Current status: $status"
+                Write-Host "Status: $status"
+                if ($status -eq "SUCCESS" -or $status -eq "FAILED") {
+                    $continue = $false
+                }
             } catch {
-                Write-Host "Polling failed — retrying..."
-                $status = ""
+                Write-Host "Still waiting..."
             }
-        } while ($status -ne "SUCCESS" -and $status -ne "")
+        }
 
         if ($status -ne "SUCCESS") {
-            Write-Error "Sonar analysis did not complete successfully."
+            Write-Error "Compute Engine did not complete successfully: $status"
             exit 1
         }
 
         # Get analysisId
         $analysisId = $taskResponse.task.analysisId
-        Write-Host "Analysis completed. analysisId: $analysisId"
+        Write-Host "Analysis ID: $analysisId"
 
-        # Build quality gate API URL
-        $qualityGateUrl = "$env:SONAR_HOST_URL/api/qualitygates/project_status?analysisId=$analysisId"
-        Write-Host "Querying Quality Gate status..."
-
+        # Query Quality Gate
+        $qgUrl = "$env:SONAR_HOST_URL/api/qualitygates/project_status?analysisId=$analysisId"
+        Write-Host "Querying Quality Gate URL: $qgUrl"
         try {
-            $qualityGateResponse = Invoke-RestMethod -Uri $qualityGateUrl -Headers $authHeader
+            $qgResponse = Invoke-RestMethod -Uri $qgUrl -Headers $headers
         } catch {
-            Write-Error "Failed to fetch Quality Gate status from Sonar."
+            Write-Error "Could not retrieve Quality Gate status"
             exit 1
         }
 
-        $qgStatus = $qualityGateResponse.projectStatus.status
+        $qgStatus = $qgResponse.projectStatus.status
         Write-Host "Quality Gate status: $qgStatus"
 
         if ($qgStatus -ne "OK") {
@@ -178,6 +176,7 @@ jobs:
         }
 
         Write-Host "Quality Gate passed!"
+
 
 
 
