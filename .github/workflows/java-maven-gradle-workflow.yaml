@@ -103,7 +103,7 @@ jobs:
     - name: SonarQube Quality Gate 
       shell: powershell
       run: |
-        Write-Host " Starting SonarQube Quality Gate check..."
+        Write-Host "Starting SonarQube Quality Gate check..."
 
         # Path to the Sonar report created by the scanner
         $reportPath = ".scannerwork/report-task.txt"
@@ -122,7 +122,6 @@ jobs:
           exit 1
         }
         $ceTaskUrl = $ceTaskUrlLine -replace "ceTaskUrl=", ""
-
         Write-Host "CE Task URL: $ceTaskUrl"
 
         # Prepare authentication header
@@ -142,7 +141,7 @@ jobs:
             $status = $taskResponse.task.status
             Write-Host "Current status: $status"
           } catch {
-            Write-Host "Polling failed — retrying…"
+            Write-Host "Polling failed — retrying..."
             $status = ""
           }
         } while ($status -ne "SUCCESS" -and $status -ne "")
@@ -154,7 +153,7 @@ jobs:
 
         # Extract analysisId
         $analysisId = $taskResponse.task.analysisId
-        Write-Host "Analysis complete. analysisId: $analysisId"
+        Write-Host "Analysis completed. analysisId: $analysisId"
 
         # Build Quality Gate API URL
         $qualityGateUrl = "$env:SONAR_HOST_URL/api/qualitygates/project_status?analysisId=$analysisId"
@@ -176,8 +175,7 @@ jobs:
           exit 1
         }
 
-        Write-Host "✅ Quality Gate passed!"
-
+        Write-Host "Quality Gate passed!"
       env:
         SONAR_TOKEN: ${{ secrets.Sonar_Token }}
         SONAR_HOST_URL: ${{ secrets.Sonar_HostUrl }}
