@@ -48,15 +48,24 @@ on:
       Sonar_Junit_ReportPaths:
         description: "Sonar junit report paths"
         type: string
+      Artifact_FileName:
+        description: "Artifacts to upload on to jfrog"
+        type: string
+      Jfrog_RepoName:
+        description: "jfrog repo name to upload artifacts"
+        type: string
+        
 
     secrets:
       Jfrog_Username:
         required: true
       Jfrog_Password:
         required: true
+      Sonar_HostUrl:
+        required: true
       Sonar_Token:
         required: true
-      Sonar_HostUrl:
+      Jfrog_Url:
         required: true
 
 jobs:
@@ -105,3 +114,16 @@ jobs:
       with:
         sonar_host_url: ${{ secrets.Sonar_HostUrl }}
         sonar_token: ${{ secrets.Sonar_Token }}
+    
+    - name: Upload artifact to JFrog
+      uses: jfrog/setup-jfrog-cli@v4
+      with:
+        version: latest
+      env:
+        JF_URL: ${{ secrets.Jfrog_Url }}
+        JF_USER: ${{ secrets.Jfrog_Username }}
+        JF_PASSWORD: ${{ secrets.Jfrog_Password }}
+
+    - name: Upload build artifact
+      run: |
+        jf rt u "$${{ inputs.Artifact_FileName }}" "$${{ inputs.Jfrog_RepoName }}/${{ github.run_number }}/"
