@@ -100,31 +100,88 @@ jobs:
           "-Dsonar.coverage.jacoco.xmlReportPaths=${{ inputs.Sonar_Jacaco_ReportPaths }}" `
           "-Dsonar.junit.reportPaths=${{ inputs.Sonar_Junit_ReportPaths }}"
 
-    - name: SonarQube Quality Gate
+    - name: SonarQube Quality Gate 
       shell: powershell
       run: |
-        $report = Get-Content .scannerwork/report-task.txt
-        $ceUrl = ($report | Where-Object { $_ -like "ceTaskUrl*" }) -replace "ceTaskUrl=", ""
-        
-        do {
-          Start-Sleep -Seconds 5
-          $task = Invoke-RestMethod $ceUrl
-        } while ($task.task.status -ne "SUCCESS")
-        
-        $analysisId = $task.task.analysisId
-        $url = "$env:SONAR_HOST_URL/api/qualitygates/project_status?analysisId=$analysisId"
-        $auth = @{
-          Authorization = "Basic " + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("$($env:SONAR_TOKEN):"))
-        }
+        Write-Host " Starting SonarQube Quality Gate check..."
 
-        $result = Invoke-RestMethod -Uri $url -Headers $auth
-        if ($result.projectStatus.status -ne "OK") {
-          Write-Error "Quality Gate failed: $($result.projectStatus.status)"
+        # Path to the Sonar report created by the scanner
+        $reportPath = ".scannerwork/report-task.txt"
+        if (-not (Test-Path $reportPath)) {
+          Write-Error "Sonar report file not found: $reportPath"
           exit 1
         }
+
+        Write-Host "Reading Sonar report..."
+        $reportLines = Get-Content $reportPath
+
+        # Extract the Compute Engine (CE) URL
+        $ceTaskUrlLine = $reportLines | Where-Object { $_ -like "ceTaskUrl*" }
+        if (-not $ceTaskUrlLine) {
+          Write-Error "Could not find ceTaskUrl in report"
+          exit 1
+        }
+        $ceTaskUrl = $ceTaskUrlLine -replace "ceTaskUrl=", ""
+
+        Write-Host "CE Task URL: $ceTaskUrl"
+
+        # Prepare authentication header
+        $authHeader = @{
+          Authorization = "Basic " + [Convert]::ToBase64String(
+            [Text.Encoding]::ASCII.GetBytes("$($env:SONAR_TOKEN):")
+          )
+        }
+
+        # Poll until analysis is complete
+        Write-Host "Waiting for analysis to complete..."
+        $status = ""
+        do {
+          Start-Sleep -Seconds 5
+          try {
+            $taskResponse = Invoke-RestMethod -Uri $ceTaskUrl -Headers $authHeader
+            $status = $taskResponse.task.status
+            Write-Host "Current status: $status"
+          } catch {
+            Write-Host "Polling failed — retrying…"
+            $status = ""
+          }
+        } while ($status -ne "SUCCESS" -and $status -ne "")
+
+        if ($status -ne "SUCCESS") {
+          Write-Error "Sonar analysis did not complete successfully."
+          exit 1
+        }
+
+        # Extract analysisId
+        $analysisId = $taskResponse.task.analysisId
+        Write-Host "Analysis complete. analysisId: $analysisId"
+
+        # Build Quality Gate API URL
+        $qualityGateUrl = "$env:SONAR_HOST_URL/api/qualitygates/project_status?analysisId=$analysisId"
+        Write-Host "Querying Quality Gate status..."
+
+        # Call the Quality Gate API
+        try {
+          $qualityGateResponse = Invoke-RestMethod -Uri $qualityGateUrl -Headers $authHeader
+        } catch {
+          Write-Error "Failed to fetch Quality Gate status from Sonar."
+          exit 1
+        }
+
+        $qgStatus = $qualityGateResponse.projectStatus.status
+        Write-Host "Quality Gate status: $qgStatus"
+
+        if ($qgStatus -ne "OK") {
+          Write-Error "Quality Gate FAILED with status: $qgStatus"
+          exit 1
+        }
+
+        Write-Host "✅ Quality Gate passed!"
+
       env:
         SONAR_TOKEN: ${{ secrets.Sonar_Token }}
         SONAR_HOST_URL: ${{ secrets.Sonar_HostUrl }}
+
 
 #-----------------linux runner -----------------------------------   
 # - name: SonarQube Quality Gate check
