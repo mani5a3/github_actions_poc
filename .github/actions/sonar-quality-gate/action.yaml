@@ -4,8 +4,11 @@ description: "Run SonarQube quality gate check"
 runs:
   using: "composite"
   steps:
+    - name: Checkout repository
+      uses: actions/checkout@v6
+
     - name: Run on Windows
-      if: runner.os == 'Windows'
+      if: runner.os == 'windows'
       shell: powershell
       run: |
         scripts/windows.ps1
@@ -14,7 +17,7 @@ runs:
         SONAR_TOKEN: ${{ inputs.sonar_token }}
 
     - name: Run on Linux / macOS
-      if: runner.os != 'Windows'
+      if: runner.os != 'windows'
       shell: bash
       run: |
         bash scripts/linux.sh
