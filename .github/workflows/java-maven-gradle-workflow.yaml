@@ -101,12 +101,11 @@ jobs:
           "-Dsonar.junit.reportPaths=${{ inputs.Sonar_Junit_ReportPaths }}"
   
         
-    - name: Quality Gate Check
+    - name: Quality Gate Check (with Git Bash)
       id: sonarqube-quality-gate-check
       shell: bash
       run: |
-        "C:/Program Files/Git/bin/bash.exe" \
-          "$GITHUB_ACTION_PATH/script/check-quality-gate.sh" \
+        "$GITHUB_ACTION_PATH/script/check-quality-gate.sh" \
           ".scannerwork/report-task.txt" \
           "180"
       env:
