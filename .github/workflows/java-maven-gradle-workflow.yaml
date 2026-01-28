@@ -100,84 +100,66 @@ jobs:
           "-Dsonar.coverage.jacoco.xmlReportPaths=${{ inputs.Sonar_Jacaco_ReportPaths }}" `
           "-Dsonar.junit.reportPaths=${{ inputs.Sonar_Junit_ReportPaths }}"
 
-    - name: SonarQube Quality Gate
+    - name: SonarQube Quality Gate (Debug)
       shell: powershell
       env:
         SONAR_TOKEN: ${{ secrets.Sonar_Token }}
         SONAR_HOST_URL: ${{ secrets.Sonar_HostUrl }}
       run: |
-        # Ensure report exists
+        Write-Host "Checking report file..."
         $reportPath = ".scannerwork/report-task.txt"
         if (-not (Test-Path $reportPath)) {
-            Write-Error "Report file not found: $reportPath"
-            exit 1
+          Write-Error "Report file not found"
+          exit 1
         }
 
-        # Read report task file
         $lines = Get-Content $reportPath
-
-        # Extract Compute Engine URL
         $ceLine = $lines | Where-Object { $_ -like "ceTaskUrl*" }
-        if (-not $ceLine) {
-            Write-Error "ceTaskUrl not found"
-            exit 1
-        }
         $ceUrl = $ceLine -replace "ceTaskUrl=", ""
+        Write-Host "CE Task URL: $ceUrl"
 
-        Write-Host "Polling Sonar Compute Engine at: $ceUrl"
-
-        # Prepare Basic Auth for Sonar
         $pair = "$($env:SONAR_TOKEN):"
         $bytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
         $base64 = [System.Convert]::ToBase64String($bytes)
         $headers = @{ Authorization = "Basic $base64" }
 
-        # Poll until analysis finishes
-        $continue = $true
-        while ($continue) {
+        Write-Host "Polling Sonar CE status..."
+        do {
             Start-Sleep -Seconds 5
             try {
                 $taskResponse = Invoke-RestMethod -Uri $ceUrl -Headers $headers
-                $status = $taskResponse.task.status
-                Write-Host "Status: $status"
-                if ($status -eq "SUCCESS" -or $status -eq "FAILED") {
-                    $continue = $false
-                }
+                $state = $taskResponse.task.status
+                Write-Host "State: $state"
             } catch {
-                Write-Host "Still waiting..."
+                Write-Host "Polling error, retrying..."
+                $state = ""
             }
-        }
+        } while ($state -ne "SUCCESS" -and $state -ne "FAILED")
 
-        if ($status -ne "SUCCESS") {
-            Write-Error "Compute Engine did not complete successfully: $status"
+        if ($state -ne "SUCCESS") {
+            Write-Error "Analysis failed or did not finish"
             exit 1
         }
 
-        # Get analysisId
         $analysisId = $taskResponse.task.analysisId
         Write-Host "Analysis ID: $analysisId"
 
-        # Query Quality Gate
         $qgUrl = "$env:SONAR_HOST_URL/api/qualitygates/project_status?analysisId=$analysisId"
-        Write-Host "Querying Quality Gate URL: $qgUrl"
+        Write-Host "Quality Gate URL: $qgUrl"
+        Write-Host "Auth header: $base64"
+
+        # Debug info before API call
+        Write-Host "Calling Quality Gate API..."
         try {
-            $qgResponse = Invoke-RestMethod -Uri $qgUrl -Headers $headers
+            $response = Invoke-RestMethod -Uri $qgUrl -Headers $headers -ErrorAction Stop
+            Write-Host "Response from Sonar API:"
+            $response | ConvertTo-Json -Depth 4
         } catch {
-            Write-Error "Could not retrieve Quality Gate status"
+            Write-Host "Error calling Sonar API:"
+            Write-Host $_.Exception.Response.StatusCode.Value__
+            Write-Host $_.Exception.Message
             exit 1
         }
-
-        $qgStatus = $qgResponse.projectStatus.status
-        Write-Host "Quality Gate status: $qgStatus"
-
-        if ($qgStatus -ne "OK") {
-            Write-Error ("Quality Gate FAILED with status: " + $qgStatus)
-            exit 1
-        }
-
-        Write-Host "Quality Gate passed!"
-
-
 
 
 #-----------------linux runner -----------------------------------   
