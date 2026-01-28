@@ -1,4 +1,4 @@
-name: java-maven-gradle-workflow
+name: java-maven-gradle-ci-workflow
 
 on:
   workflow_dispatch:
