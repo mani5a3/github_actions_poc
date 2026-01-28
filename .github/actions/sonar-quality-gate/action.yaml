@@ -1,0 +1,23 @@
+name: "Sonar Quality Gate"
+description: "Run SonarQube quality gate check"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run on Windows
+      if: runner.os == 'Windows'
+      shell: powershell
+      run: |
+        scripts/windows.ps1
+      env:
+        SONAR_HOST_URL: ${{ inputs.sonar_host_url }}
+        SONAR_TOKEN: ${{ inputs.sonar_token }}
+
+    - name: Run on Linux / macOS
+      if: runner.os != 'Windows'
+      shell: bash
+      run: |
+        bash scripts/linux.sh
+      env:
+        SONAR_HOST_URL: ${{ inputs.sonar_host_url }}
+        SONAR_TOKEN: ${{ inputs.sonar_token }}
