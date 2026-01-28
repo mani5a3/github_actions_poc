@@ -134,3 +134,18 @@ workflow_dispatch - if you want to manually trigger the workflow then we can put
 
 free github accounts giving 500 MB storage for artifacts
 Artifacts will be available till 90 days
+
+
+reusable workflow: 
+
+spring-petclinic secrets
+  ↓
+reusable workflow (with:)
+  ↓
+composite action inputs
+  ↓
+env:
+  SONAR_HOST_URL
+  SONAR_TOKEN
+  ↓
+windows.ps1
