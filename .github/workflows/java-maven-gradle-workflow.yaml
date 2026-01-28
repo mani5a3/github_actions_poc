@@ -28,10 +28,7 @@ on:
         description: "Sonar project key"
         type: string
       Sonar_ProjectName:
-        description: "Sonar project key"
-        type: string
-      Sonar_ProjectVersion:
-        description: "Sonar project key"
+        description: "Sonar project name"
         type: string
       Sonar_JavaSource:
         description: "java version"
@@ -93,7 +90,7 @@ jobs:
         & "${{ inputs.Sonar_ScannerHome }}" `
           "-Dsonar.projectKey=${{ inputs.Sonar_ProjectKey }}" `
           "-Dsonar.projectName=${{ inputs.Sonar_ProjectName }}" `
-          "-Dsonar.projectVersion=${{ inputs.Sonar_ProjectVersion }}" `
+          "-Dsonar.projectVersion=${{ github.run_number }}" `
           "-Dsonar.java.source=${{ inputs.Sonar_JavaSource }}" `
           "-Dsonar.host.url=${{ inputs.Sonar_HostUrl }}" `
           "-Dsonar.login=${{ secrets.Sonar_Token }}" `
