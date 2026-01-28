@@ -60,9 +60,7 @@ on:
         required: true
       Jfrog_Password:
         required: true
-      Sonar_Username:
-        required: true
-      Sonar_Password:
+      Sonar_Token:
         required: true
 
 jobs:
@@ -98,8 +96,7 @@ jobs:
           "-Dsonar.projectVersion=${{ inputs.Sonar_ProjectVersion }}" `
           "-Dsonar.java.source=${{ inputs.Sonar_JavaSource }}" `
           "-Dsonar.host.url=${{ inputs.Sonar_HostUrl }}" `
-          "-Dsonar.login=${{ secrets.Sonar_Username }}" `
-          "-Dsonar.password=${{ secrets.Sonar_Password }}" `
+          "-Dsonar.login=${{ secrets.Sonar_Token }}" `
           "-Dsonar.sources=${{ inputs.Sonar_sources }}" `
           "-Dsonar.tests=${{ inputs.Sonar_tests }}" `
           "-Dsonar.java.binaries=${{ inputs.Sonar_Javabinaries }}" `
