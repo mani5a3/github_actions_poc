@@ -77,7 +77,7 @@ jobs:
 
     - name: compile the maven code
       if: ${{ inputs.build_tool == 'maven' }}
-      run: mvn clean verify
+      run: mvn clean verify -Drevision=${{ github.run_number }}
 
     - name: compile the gradle code
       if: ${{ inputs.build_tool == 'gradle' }}
