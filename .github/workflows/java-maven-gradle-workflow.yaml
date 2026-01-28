@@ -107,78 +107,93 @@ jobs:
       run: |
         Write-Host "Starting SonarQube Quality Gate check"
 
-        # Path to Sonar report file
+        # Verify report exists
         $reportPath = ".scannerwork/report-task.txt"
         if (-not (Test-Path $reportPath)) {
-            Write-Error "Report file not found: $reportPath"
+            Write-Host "ERROR: Report file not found at $reportPath"
             exit 1
         }
 
-        Write-Host "Reading Sonar report"
+        # Read report
         $reportLines = Get-Content $reportPath
-
-        # Extract compute engine task URL
         $ceLine = $reportLines | Where-Object { $_ -match "^ceTaskUrl=" }
         if (-not $ceLine) {
-            Write-Error "ceTaskUrl entry not found in report"
+            Write-Host "ERROR: ceTaskUrl not found in report"
             exit 1
         }
         $ceUrl = $ceLine -replace "^ceTaskUrl=", ""
         Write-Host "Compute engine URL: $ceUrl"
 
-        # Prepare authentication header for Sonar API
+        # Prepare auth header
         $pair = "$($env:SONAR_TOKEN):"
         $bytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
         $base64 = [System.Convert]::ToBase64String($bytes)
         $headers = @{ Authorization = "Basic $base64" }
 
-        Write-Host "Polling Sonar compute engine"
+        # Poll Sonar until analysis is completed
+        $maxAttempts = 60
+        $attempt = 0
         $finalStatus = ""
         do {
             Start-Sleep -Seconds 5
+            $attempt++
             try {
                 $taskResponse = Invoke-RestMethod -Uri $ceUrl -Headers $headers -ErrorAction Stop
-                $currentStatus = $taskResponse.task.status
-                Write-Host "Current status: $currentStatus"
-                $finalStatus = $currentStatus
+                $finalStatus = $taskResponse.task.status
+                Write-Host "Sonar compute engine status: $finalStatus"
             } catch {
-                Write-Host "Error calling compute engine API, retrying"
+                Write-Host "Warning: error calling CE API; retrying..."
                 $finalStatus = ""
+            }
+            if ($attempt -ge $maxAttempts) {
+                Write-Host "ERROR: Timed out waiting for Sonar compute engine"
+                exit 1
             }
         } while ($finalStatus -ne "SUCCESS" -and $finalStatus -ne "FAILED")
 
         if ($finalStatus -ne "SUCCESS") {
-            Write-Error "Sonar compute engine did not complete successfully: $finalStatus"
+            Write-Host "ERROR: Sonar compute engine did not finish successfully ($finalStatus)"
             exit 1
         }
 
-        Write-Host "Compute engine analysis completed"
-
-        # Extract analysis identifier
+        # Fetch Quality Gate result
         $analysisId = $taskResponse.task.analysisId
-        Write-Host "Analysis identifier: $analysisId"
+        if (-not $analysisId) {
+            Write-Host "ERROR: analysisId not found"
+            exit 1
+        }
 
-        # Build quality gate API URL
         $qgUrl = "$env:SONAR_HOST_URL/api/qualitygates/project_status?analysisId=$analysisId"
         Write-Host "Quality gate API URL: $qgUrl"
 
-        # Call quality gate API
         try {
             $qgResponse = Invoke-RestMethod -Uri $qgUrl -Headers $headers -ErrorAction Stop
         } catch {
-            Write-Error "Failed to retrieve quality gate status"
+            Write-Host "ERROR: Failed to call Sonar quality gate API"
             exit 1
         }
 
         $qgStatus = $qgResponse.projectStatus.status
-        Write-Host "Quality gate status: $qgStatus"
+        Write-Host "Sonar quality gate status: $qgStatus"
 
-        if ($qgStatus -ne "OK") {
-            Write-Error ("Quality gate failed with status: " + $qgStatus)
+        # Print each condition
+        Write-Host "Quality Gate condition results:"
+        foreach ($cond in $qgResponse.projectStatus.conditions) {
+            Write-Host ("  Metric        : {0}" -f $cond.metricKey)
+            Write-Host ("    Status      : {0}" -f $cond.status)
+            Write-Host ("    ActualValue : {0}" -f $cond.actualValue)
+            Write-Host ("    Comparator  : {0}" -f $cond.comparator)
+            Write-Host ("    Threshold   : {0}" -f $cond.errorThreshold)
+        }
+
+        # Fail based on status
+        if ($qgStatus -eq "OK") {
+            Write-Host "Quality gate passed"
+        } else {
+            Write-Host "Quality gate failed. Please fix the above conditions."
             exit 1
         }
 
-        Write-Host "Quality gate passed"
 
 
 
