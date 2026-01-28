@@ -4,9 +4,6 @@ description: "Run SonarQube quality gate check"
 runs:
   using: "composite"
   steps:
-    - name: Checkout repository
-      uses: actions/checkout@v6
-
     - name: Run on Windows
       if: runner.os == 'windows'
       shell: powershell
