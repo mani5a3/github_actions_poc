@@ -126,4 +126,4 @@ jobs:
 
     - name: Upload build artifact
       run: |
-        jf rt u "$${{ inputs.Artifact_FileName }}" "$${{ inputs.Jfrog_RepoName }}/${{ github.run_number }}/"
+        jf rt u "${{ inputs.Artifact_FileName }}" "${{ inputs.Jfrog_RepoName }}/${{ github.run_number }}/"
