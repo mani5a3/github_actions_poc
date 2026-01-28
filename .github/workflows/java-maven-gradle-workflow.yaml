@@ -21,6 +21,9 @@ on:
         required: false
         default: "clean install"
         type: string
+      Sonar_ScannerHome:
+        description: "Sonar scanner home path"
+        type: string
       Sonar_ProjectKey:
         description: "Sonar project key"
         type: string
@@ -89,7 +92,7 @@ jobs:
     - name: sonar static code analysis
       shell: powershell
       run: |
-        & "C:\softwares\sonar-scanner-4.8.0.2856-windows\bin\sonar-scanner.bat" `
+        & "${{ inputs.Sonar_ScannerHome }}" `
           "-Dsonar.projectKey=${{ inputs.Sonar_ProjectKey }}" `
           "-Dsonar.projectName=${{ inputs.Sonar_ProjectName }}" `
           "-Dsonar.projectVersion=${{ inputs.Sonar_ProjectVersion }}" `
