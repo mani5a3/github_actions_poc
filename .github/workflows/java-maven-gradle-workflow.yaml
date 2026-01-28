@@ -33,9 +33,6 @@ on:
       Sonar_JavaSource:
         description: "java version"
         type: string
-      Sonar_HostUrl:
-        description: "Sonarqube dashboard url"
-        type: string
       Sonar_sources:
         description: "Sonar sources source code path"
         type: string
@@ -58,6 +55,8 @@ on:
       Jfrog_Password:
         required: true
       Sonar_Token:
+        required: true
+      Sonar_HostUrl:
         required: true
 
 jobs:
@@ -92,7 +91,7 @@ jobs:
           "-Dsonar.projectName=${{ inputs.Sonar_ProjectName }}" `
           "-Dsonar.projectVersion=${{ github.run_number }}" `
           "-Dsonar.java.source=${{ inputs.Sonar_JavaSource }}" `
-          "-Dsonar.host.url=${{ inputs.Sonar_HostUrl }}" `
+          "-Dsonar.host.url=${{ secrets.Sonar_HostUrl }}" `
           "-Dsonar.login=${{ secrets.Sonar_Token }}" `
           "-Dsonar.sources=${{ inputs.Sonar_sources }}" `
           "-Dsonar.tests=${{ inputs.Sonar_tests }}" `
