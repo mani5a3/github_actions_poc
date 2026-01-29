@@ -58,12 +58,12 @@ on:
         description: "Set as true if you want to upload artifacts to jfrog"
         type: string
         required: true
-        default: "false"
+        default: "true"
       run_sonar_analysis:
         description: "Set as true if you want to run sonar analysis"
         type: string
         required: true
-        default: "false"
+        default: "true"
 
     secrets:
       Jfrog_Username:
