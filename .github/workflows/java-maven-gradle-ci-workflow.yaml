@@ -54,7 +54,16 @@ on:
       Jfrog_RepoName:
         description: "jfrog repo name to upload artifacts"
         type: string
-        
+      upload_artifact:
+        description: "Set as true if you want to upload artifacts to jfrog"
+        type: string
+        required: true
+        default: "false"
+      run_sonar_analysis:
+        description: "Set as true if you want to run sonar analysis"
+        type: string
+        required: true
+        default: "false"
 
     secrets:
       Jfrog_Username:
@@ -93,6 +102,7 @@ jobs:
 
 
     - name: sonar static code analysis
+      if: inputs.run_sonar_analysis == 'true'
       shell: powershell
       run: |
         & "${{ inputs.Sonar_ScannerHome }}" `
@@ -109,6 +119,7 @@ jobs:
           "-Dsonar.junit.reportPaths=${{ inputs.Sonar_Junit_ReportPaths }}"
 
     - name: SonarQualityGate
+      if: inputs.run_sonar_analysis == 'true'
       #Calling composite action
       uses: mani5a3/github_actions_poc/.github/actions/sonar-quality-gate@main
       with:
@@ -117,6 +128,7 @@ jobs:
     
     - name: Upload artifact to JFrog
       uses: jfrog/setup-jfrog-cli@v4
+      if: inputs.upload_artifact == 'true'
       with:
         version: latest
       env:
@@ -125,5 +137,6 @@ jobs:
         JF_PASSWORD: ${{ secrets.Jfrog_Password }}
 
     - name: Upload build artifact
+      if: inputs.upload_artifact == 'true'
       run: |
         jf rt u "${{ inputs.Artifact_FileName }}" "${{ inputs.Jfrog_RepoName }}/${{ github.run_number }}/"
